@@ -12,6 +12,8 @@ A successful rerun reuses the saved registration. If setup was interrupted after
 
 If you change servers or want another bridge device, use a different `--private-dir` and device name. Revoking access means removing this bridge's Mobile App registration in HA; also delete its connection file from the phone and private backups if no longer needed. Re-registering produces new credentials.
 
+For dashboard installation and the six-hour delivery warning, see [Home Assistant configuration](HOME_ASSISTANT.md).
+
 ## Sensors and units
 
 No sample readings are seeded. Sensors appear when the phone uploads its first recognised Audi widget reading. Default names are based on `Audi Widget Bridge`. HA may convert distance readings to its configured unit system; to retain miles, select the range and mileage entities and set their unit preference to `mi`.

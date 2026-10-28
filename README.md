@@ -120,6 +120,8 @@ Look under **Settings → Devices & services → Mobile App → Audi Widget Brid
 
 An optional native-card dashboard is in [examples/dashboard.example.json](examples/dashboard.example.json). Create an empty manual dashboard, open its raw configuration editor, and paste the file's JSON (JSON is valid YAML). Replace the entity IDs if your prefix differs. This is an example for a **new** dashboard; do not replace an existing dashboard unless you intend to.
 
+See [Home Assistant configuration](docs/HOME_ASSISTANT.md) for complete setup and a standalone six-hour health card you can add to an existing dashboard. Repository v0.4.1 updates the HA configuration; the Android app remains v0.4.
+
 ## What triggers updates?
 
 The bridge sends the startup snapshot and then every widget callback, including callbacks whose values are unchanged. Audi controls when it updates the widget. A five-minute timer retries **failed pending uploads**; it does not fetch vehicle data. A separate automatic refresh invokes the widget refresh control after 60 minutes without a successful HA transfer. Every successful transfer (even unchanged values) resets the countdown, as does a refresh attempt. Failed uploads do not reset it. Android sleep can delay the attempt; waking the phone checks overdue work.
@@ -130,7 +132,7 @@ See [refresh testing](docs/REFRESH.md) for the optional refresh-button experimen
 
 - Audi's contact-time text, phone receipt time and upload time are different things. A successful upload may contain old vehicle data.
 - Relative Audi text such as “Today” is kept as supplied; it is not converted into a potentially incorrect absolute timestamp.
-- Home Assistant retains the latest values when uploads stop. There is no automatic server-side stale/unavailable timeout in this version. The example dashboard warns when widget receipt is older than two hours; this does not establish source-data freshness.
+- Home Assistant retains the latest values when uploads stop. There is no automatic server-side stale/unavailable timeout in this version. The example dashboard shows a red warning when the last bridge delivery is over six hours old; this does not establish source-data freshness.
 - On Samsung, consider **Apps → Audi Widget Bridge → Battery → Unrestricted**, and exclude it from sleeping apps where supported. Menu names vary.
 - Optional **Resume capture after phone restart** resumes a previously running capture after normal boot/first unlock. Force-stop and app updates can require opening the app and starting capture again.
 - No permanent wake lock is held. Manufacturer policies and Android sleep can delay timers or stop the service. Overnight behaviour is not guaranteed.
