@@ -1,0 +1,10 @@
+Example EV
+Last vehicle contact: Today, 09:15
+Charge status
+72 %
+Range
+180 mi
+Vehicle status
+Parked safely
+Mileage
+12,345 mi

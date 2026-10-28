@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="local.audi.widgetprobe" android:versionCode="3" android:versionName="0.3">
+  <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <queries><intent><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent></queries>
+  <application android:label="Audi Widget Bridge" android:theme="@android:style/Theme.Material.Light.NoActionBar" android:allowBackup="false" android:usesCleartextTraffic="true" android:supportsRtl="true">
+    <activity android:name=".MainActivity" android:exported="true">
+      <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+    </activity>
+    <service android:name=".MonitorService" android:exported="false" android:foregroundServiceType="specialUse">
+      <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="User-started diagnostic widget host recording delivery of widget updates while the device is locked; stopped by user notification action."/>
+    </service>
+    <receiver android:name=".BootReceiver" android:exported="false"><intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter></receiver>
+    <receiver android:name=".ControlWidget" android:label="Probe control widget" android:exported="false">
+      <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter>
+      <meta-data android:name="android.appwidget.provider" android:resource="@xml/control_widget"/>
+    </receiver>
+  </application>
+</manifest>

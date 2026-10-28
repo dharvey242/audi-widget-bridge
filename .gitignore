@@ -1,0 +1,27 @@
+# Build products, private signing keys and local tools
+/build/
+/.private/
+*.apk
+*.aab
+*.dex
+*.class
+*.jar
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+local.properties
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.idea/
+.vscode/
+.DS_Store
+# Real connection files and exported phone logs must never be published.
+*connection*.json
+!examples/connection.example.json
+*registration*.json
+*.ndjson

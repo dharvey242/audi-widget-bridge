@@ -1,0 +1,157 @@
+{
+  "title": "Audi",
+  "views": [
+    {
+      "title": "Vehicle",
+      "path": "vehicle",
+      "icon": "mdi:car-electric",
+      "type": "masonry",
+      "cards": [
+        {
+          "type": "vertical-stack",
+          "cards": [
+            {
+              "type": "markdown",
+              "content": "# {{ states('sensor.audi_widget_bridge_vehicle_name') }}\nCharge, range and vehicle status from myAudi.\n"
+            },
+            {
+              "type": "grid",
+              "columns": 2,
+              "square": false,
+              "cards": [
+                {
+                  "type": "gauge",
+                  "entity": "sensor.audi_widget_bridge_battery",
+                  "name": "Battery charge",
+                  "min": 0,
+                  "max": 100,
+                  "needle": true,
+                  "severity": {
+                    "red": 0,
+                    "yellow": 20,
+                    "green": 40
+                  }
+                },
+                {
+                  "type": "entity",
+                  "entity": "sensor.audi_widget_bridge_range",
+                  "name": "Estimated range",
+                  "icon": "mdi:map-marker-distance"
+                }
+              ]
+            },
+            {
+              "type": "entities",
+              "title": "Vehicle",
+              "show_header_toggle": false,
+              "entities": [
+                {
+                  "entity": "sensor.audi_widget_bridge_vehicle_status",
+                  "name": "Vehicle status"
+                },
+                {
+                  "entity": "sensor.audi_widget_bridge_mileage",
+                  "name": "Mileage"
+                },
+                {
+                  "entity": "sensor.audi_widget_bridge_vehicle_name",
+                  "name": "Vehicle name"
+                }
+              ]
+            },
+            {
+              "type": "history-graph",
+              "title": "Battery \u00b7 last 24 hours",
+              "hours_to_show": 24,
+              "entities": [
+                {
+                  "entity": "sensor.audi_widget_bridge_battery",
+                  "name": "Battery charge"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "vertical-stack",
+          "cards": [
+            {
+              "type": "entities",
+              "title": "Contact and updates",
+              "show_header_toggle": false,
+              "entities": [
+                {
+                  "entity": "sensor.audi_widget_bridge_last_vehicle_contact",
+                  "name": "Audi vehicle contact"
+                },
+                {
+                  "entity": "sensor.audi_widget_bridge_widget_received",
+                  "name": "Widget captured"
+                },
+                {
+                  "entity": "sensor.audi_widget_bridge_bridge_delivery",
+                  "name": "Sent to Home Assistant"
+                }
+              ]
+            },
+            {
+              "type": "markdown",
+              "content": "{% set received = as_datetime(states('sensor.audi_widget_bridge_widget_received'), none) %}\n{% if received %}\n{% set age = ((now() - received).total_seconds() / 60) | int %}\n{% if age >= 120 %}\n**Widget update overdue** \u2014 last captured {{ relative_time(received) }} ago.\n{% else %}\n**Widget last captured {{ relative_time(received) }} ago.**\n{% endif %}\n{% else %}\n**Waiting for a widget reading.**\n{% endif %}\n\nAudi's last vehicle contact: **{{ states('sensor.audi_widget_bridge_last_vehicle_contact') }}**.\n\n{% if state_attr('sensor.audi_widget_bridge_widget_data', 'capture_phase') == 'startup_snapshot' %}\nThe latest reading is a startup snapshot and may contain cached vehicle data.\n{% endif %}\n\nCapture and delivery times show when the phone read and sent the widget. They do not establish when the car last reported new data.\n"
+            },
+            {
+              "type": "history-graph",
+              "title": "Range \u00b7 last 24 hours",
+              "hours_to_show": 24,
+              "entities": [
+                {
+                  "entity": "sensor.audi_widget_bridge_range",
+                  "name": "Estimated range"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Widget details",
+      "path": "widget-details",
+      "icon": "mdi:text-box-outline",
+      "type": "masonry",
+      "cards": [
+        {
+          "type": "markdown",
+          "content": "## Text supplied by myAudi\n```text\n{{ (state_attr('sensor.audi_widget_bridge_widget_data', 'raw_text') or ['No widget text received.']) | join('\n') }}\n```\n"
+        },
+        {
+          "type": "vertical-stack",
+          "cards": [
+            {
+              "type": "markdown",
+              "content": "## Capture details\n- **Capture type:** {{ state_attr('sensor.audi_widget_bridge_widget_data', 'capture_phase') | default('Unknown', true) }}\n- **Phone locked at capture:** {{ state_attr('sensor.audi_widget_bridge_widget_data', 'phone_locked') }}\n- **Screen interactive at capture:** {{ state_attr('sensor.audi_widget_bridge_widget_data', 'screen_interactive') }}\n\nVehicle status is displayed as Audi supplies it. No locked/unlocked interpretation is applied.\n"
+            },
+            {
+              "type": "entities",
+              "title": "Bridge diagnostics",
+              "show_header_toggle": false,
+              "entities": [
+                {
+                  "entity": "sensor.audi_widget_bridge_widget_data",
+                  "name": "Full widget data \u00b7 tap for attributes"
+                },
+                {
+                  "entity": "sensor.audi_widget_bridge_widget_received",
+                  "name": "Widget captured"
+                },
+                {
+                  "entity": "sensor.audi_widget_bridge_bridge_delivery",
+                  "name": "Sent to Home Assistant"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

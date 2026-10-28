@@ -1,0 +1,7 @@
+{
+  "format": 1,
+  "device_name": "Audi Widget Bridge",
+  "webhook_urls": [
+    "https://YOUR_HOME_ASSISTANT_HOST/api/webhook/YOUR_DEVICE_WEBHOOK_ID"
+  ]
+}
