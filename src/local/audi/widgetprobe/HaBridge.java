@@ -120,6 +120,7 @@ final class HaBridge {
                 }
                 status="Connected — all sensor updates accepted."+(disabled>0 ? " "+disabled+" sensors are disabled in HA." : "");
                 Records.note(app,"ha_delivery", "Sensor updates accepted; widget receipt="+snapshot.getString("received_at"));
+                MonitorService.dataTransferred(app);
                 delivered=true;
             } catch(Exception e) {
                 // Exception messages and URLs may contain webhook credentials. Never log them.

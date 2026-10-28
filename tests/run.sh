@@ -5,6 +5,8 @@ ROOT="$(cd -- "$(dirname -- "$0")/.." && pwd)"
 TEMP_TEST="$(mktemp -d)"
 trap 'rm -rf -- "$TEMP_TEST"' EXIT
 "$JAVA_HOME/bin/javac" --release 8 -d "$TEMP_TEST" \
-    "$ROOT/src/local/audi/widgetprobe/AudiFields.java" "$ROOT/tests/AudiFieldsTest.java"
+    "$ROOT/src/local/audi/widgetprobe/AudiFields.java" "$ROOT/tests/AudiFieldsTest.java" \
+    "$ROOT/src/local/audi/widgetprobe/RefreshSchedule.java" "$ROOT/tests/RefreshScheduleTest.java"
 "$JAVA_HOME/bin/java" -cp "$TEMP_TEST" local.audi.widgetprobe.AudiFieldsTest "$ROOT/tests/widget-text.txt"
+"$JAVA_HOME/bin/java" -cp "$TEMP_TEST" local.audi.widgetprobe.RefreshScheduleTest
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s "$ROOT/tests" -p 'test_*.py' -v

@@ -1,3 +1,8 @@
+# 0.4
+
+- Automatic widget refresh after 60 minutes without a successful HA transfer while capture runs. Successful transfers reset the countdown; no immediate transfer/refresh loop.
+- Persisted deadline, screen-wake catch-up, and next-due status. Android sleep can delay execution.
+
 # Changelog
 
 ## 0.3 — public source preparation

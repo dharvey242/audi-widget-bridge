@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
         LinearLayout column = new LinearLayout(this);
         column.setOrientation(LinearLayout.VERTICAL); column.setPadding(24, 32, 24, 32);
         scroll.addView(column); setContentView(scroll);
-        TextView title = new TextView(this); title.setText("Audi Widget Bridge · 0.3"); title.setTextSize(27); column.addView(title);
+        TextView title = new TextView(this); title.setText("Audi Widget Bridge · 0.4"); title.setTextSize(27); column.addView(title);
         TextView intro = new TextView(this);
         intro.setText("Select a widget, start capture, then lock your phone. Updates are recorded locally without displaying the widget. All readable Audi fields are sent to your configured Home Assistant device. Vehicle status is preserved as text.\n\nNo Audi login, root or accessibility access is needed. Import your connection file below. A notification stays visible during capture.\n");
         intro.setTextSize(16); column.addView(intro);
@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
             + "\nCapture: " + (MonitorService.running ? "RUNNING" : "STOPPED")
             + "\nCallbacks this session: " + MonitorService.callbackCount
             + "\nAfter startup, screen off + device locked: " + MonitorService.lockedCallbacks
-            + "\n" + MonitorService.lastError + "\n\n" + MonitorService.refreshTarget + "\n" + MonitorService.refreshStatus + "\n\n" + HaBridge.status(this)
+            + "\n" + MonitorService.lastError + "\n\n" + MonitorService.refreshTarget + "\n" + MonitorService.refreshStatus + "\n" + MonitorService.automaticStatus(this) + "\n\n" + HaBridge.status(this)
             + "\n\nLatest extracted content (raw; timestamps are not interpreted):\n");
         content.setText(MonitorService.lastContent);
     }

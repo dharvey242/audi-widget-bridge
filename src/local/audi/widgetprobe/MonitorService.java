@@ -19,6 +19,40 @@ public class MonitorService extends Service {
     boolean delayedRefresh = false;
     int refreshCallbacks;
     Runnable refreshTimeout;
+    static final long AUTO_INTERVAL = RefreshSchedule.INTERVAL;
+    final Runnable automaticRefresh = new Runnable() {
+        @Override public void run() {
+            if (!running) return;
+            long now = System.currentTimeMillis();
+            SharedPreferences prefs = getSharedPreferences("probe", 0);
+            long due = prefs.getLong("autoRefreshDue", 0);
+            if (due != RefreshSchedule.normalize(now, due)) {
+                due = RefreshSchedule.normalize(now, due);
+                prefs.edit().putLong("autoRefreshDue", due).apply();
+            }
+            if (RefreshSchedule.shouldRefresh(now, due, delayedRefresh || refreshId != null)) {
+                // Advance before invoking: synchronous widget callbacks must not loop.
+                prefs.edit().putLong("autoRefreshDue", now + AUTO_INTERVAL).apply();
+                Records.note(MonitorService.this, "automatic_refresh_due", "60-minute inactivity interval elapsed.");
+                performRefresh("automatic");
+            }
+            handler.removeCallbacks(this);
+            handler.postDelayed(this, 60000);
+        }
+    };
+
+    static void dataTransferred(Context context) {
+        context.getSharedPreferences("probe", 0).edit()
+            .putLong("autoRefreshDue", System.currentTimeMillis() + AUTO_INTERVAL).apply();
+    }
+
+    static String automaticStatus(Context context) {
+        long due = context.getSharedPreferences("probe", 0).getLong("autoRefreshDue", 0);
+        return "Automatic refresh: 60 minutes after the last successful HA transfer or refresh attempt."
+            + (running && due > 0 ? " Next due: " + java.time.Instant.ofEpochMilli(due).toString() : " Start capture to enable.")
+            + " Android sleep may delay execution.";
+    }
+
     @Override public void onCreate() { super.onCreate(); active = this; }
 
     static String requestRefresh(boolean afterLock) {
@@ -67,7 +101,7 @@ public class MonitorService extends Service {
         try {request.put("request_id",refreshId).put("mode",mode).put("target",RefreshAction.label(target)).put("audi_contact_before",refreshBefore);}
         catch(JSONException ignored) { }
         Records.append(this,request);
-        getSharedPreferences("probe",0).edit().putLong("lastRefreshAttempt",now).apply();
+        getSharedPreferences("probe",0).edit().putLong("lastRefreshAttempt",now).putLong("autoRefreshDue",now + AUTO_INTERVAL).apply();
         String attemptedId=refreshId;
         try {
             // Invoke the listener Android installed from Audi's RemoteViews, without
@@ -157,6 +191,7 @@ public class MonitorService extends Service {
             view = host.createView(getApplicationContext(), id, info);
             host.startListening();
             running = true;
+            handler.post(automaticRefresh);
             handler.post(new Runnable() {
                 @Override public void run() {
                     if (!running) return;
@@ -165,7 +200,7 @@ public class MonitorService extends Service {
                 }
             });
             screenReceiver = new BroadcastReceiver() {
-                @Override public void onReceive(Context c, Intent i) { Records.note(c, "screen_event", i.getAction()); }
+                @Override public void onReceive(Context c, Intent i) { Records.note(c, "screen_event", i.getAction()); handler.removeCallbacks(automaticRefresh); handler.post(automaticRefresh); }
             };
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_SCREEN_OFF); filter.addAction(Intent.ACTION_SCREEN_ON); filter.addAction(Intent.ACTION_USER_PRESENT);

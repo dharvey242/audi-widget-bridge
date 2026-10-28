@@ -14,7 +14,7 @@ This is an independent community project, not affiliated with Audi or Home Assis
 - Keeps vehicle status as **raw text**. It does not infer locked/unlocked from “Parked safely”.
 - Captures background widget updates with a foreground service and persistent notification.
 - Stores the latest pending snapshot and retries failed uploads every five minutes while capture runs.
-- Offers a manual refresh action and a one-shot locked-phone refresh test. There is **no scheduled periodic Audi refresh**.
+- Offers a manual refresh action and a one-shot locked-phone refresh test. Automatically attempts refresh after **60 minutes without a successful HA transfer** while capture runs.
 
 ## Requirements
 
@@ -122,7 +122,7 @@ An optional native-card dashboard is in [examples/dashboard.example.json](exampl
 
 ## What triggers updates?
 
-The bridge sends the startup snapshot and then every widget callback, including callbacks whose values are unchanged. Audi controls when it updates the widget. A five-minute timer retries **failed pending uploads**; it does not periodically fetch or resend vehicle data.
+The bridge sends the startup snapshot and then every widget callback, including callbacks whose values are unchanged. Audi controls when it updates the widget. A five-minute timer retries **failed pending uploads**; it does not fetch vehicle data. A separate automatic refresh invokes the widget refresh control after 60 minutes without a successful HA transfer. Every successful transfer (even unchanged values) resets the countdown, as does a refresh attempt. Failed uploads do not reset it. Android sleep can delay the attempt; waking the phone checks overdue work.
 
 See [refresh testing](docs/REFRESH.md) for the optional refresh-button experiment. Invoking the widget's refresh action is **not proof of a fresh report from the car**.
 

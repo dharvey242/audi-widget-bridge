@@ -1,3 +1,9 @@
+# Automatic refresh (v0.4)
+
+While capture is running, the bridge attempts the widget refresh action after 60 minutes without a successful Home Assistant data transfer. A successful transfer, including unchanged or retried readings, restarts the 60-minute countdown. It never triggers an immediate refresh from a transfer, avoiding feedback loops. Manual refresh attempts also restart the countdown.
+
+The deadline persists across process restarts. Stopping capture disables execution; restarting capture checks an overdue deadline. A missing or ambiguous refresh control is logged and retried after another hour. Pending manual/locked tests are allowed to finish first. No alarm or wake lock is used: Android sleep may delay execution, and screen events check overdue work. This is not an exact hourly wake-up guarantee. Cached Audi data may still be returned.
+
 # Refresh-button experiment
 
 The app can invoke the click listener Android installed on a uniquely identified refresh/reload control in the hosted myAudi widget. It does not guess coordinates, extract private PendingIntents, use reflection, send guessed broadcasts or bypass the lock screen.
@@ -15,7 +21,7 @@ Tap **Refresh Audi now**. The app logs the attempted action and observes subsequ
 3. Leave it locked for about three minutes.
 4. Reopen the bridge and export its log before opening myAudi.
 
-This makes one attempt only if the device is securely locked and its screen is off when the timer fires. Android sleep may delay the timer. It does not wake/unlock the phone. Stop capture or a process restart cancels the pending test. No recurring Audi refresh is scheduled.
+This makes one attempt only if the device is securely locked and its screen is off when the timer fires. Android sleep may delay the timer. It does not wake/unlock the phone. Stop capture or a process restart cancels the pending test. The automatic inactivity schedule operates separately while capture runs.
 
 ## Interpret the evidence correctly
 
