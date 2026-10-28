@@ -147,6 +147,83 @@ The repository contains synthetic fixtures only. `bash tests/run.sh` runs parser
 
 See [setup and troubleshooting](docs/SETUP.md) and [security](SECURITY.md). Exported logs contain widget content, timestamps and device metadata; redact them before sharing. Never post a Home Assistant token, webhook URL, registration JSON or signing key.
 
+## Reproduce this project with Codex
+
+Copy the prompt below into Codex with a local checkout of this repository open, or let Codex clone it into a new folder. It asks Codex to reproduce the working build and guide your own setup. You will still need an Android phone with a working, signed-in myAudi widget and your own Home Assistant installation. Never paste passwords, access tokens or connection files into the prompt.
+
+```text
+Help me reproduce and set up Audi Widget Bridge for my own Android phone
+and Home Assistant installation, using this public repository as the reference:
+https://github.com/dharvey242/audi-widget-bridge
+
+If it is not already checked out, clone it into a new folder. Inspect the
+existing code and read README.md, SECURITY.md, docs/BUILDING.md,
+docs/HOME_ASSISTANT.md, docs/REFRESH.md and docs/TESTING.md before editing.
+Reuse the implementation and build process rather than replacing working
+code unnecessarily. Preserve existing user changes. Record the source commit
+used so the result can be reproduced.
+
+Reproduce these behaviours:
+- An Android app that hosts its own myAudi AppWidget off screen using Android's
+  widget-host APIs and the user's widget-selection/binding consent. It must
+  not require a separate home-screen widget, root, accessibility scraping,
+  screen unlocking, or direct Audi API credentials.
+- Capture readable widget text and content descriptions while a foreground
+  service runs, including updates received while the phone is locked. Keep
+  Android's foreground-service requirements and explain battery-management
+  limitations; do not promise uninterrupted background operation.
+- Extract battery percentage, range, mileage, vehicle name, raw vehicle status
+  and raw Audi contact-time text. Preserve readable widget content as diagnostic
+  attributes. Support the existing English-label parser and mi/km units; retain
+  unknown values as unknown. Do not infer locked/unlocked from status text.
+- Forward the nine existing sensors through Home Assistant's Mobile App API.
+  Keep capture time, delivery time and Audi source contact text distinct.
+  Persist the latest pending snapshot and retry failed uploads every five
+  minutes while capture runs. Do not send synthetic vehicle readings to HA.
+- Invoke only a uniquely identified widget refresh control. Keep manual refresh
+  and the one-shot locked-phone test. Automatically attempt refresh after
+  60 minutes without a successful HA transfer; each successful transfer or
+  refresh attempt resets the countdown. Never refresh immediately on every
+  transfer, which would create a feedback loop. Preserve the deadline across
+  restarts, avoid overlapping attempts, and document Android sleep delays.
+- Provide the Home Assistant dashboard and standalone health card: green for
+  a delivery within six hours, red after more than six hours, and amber for
+  missing/invalid or significantly future timestamps. This is a dashboard
+  indicator, not a push notification or proof of fresh vehicle data.
+
+Build and verification:
+- Use the repository's Bash/JDK/Android SDK build scripts. Inspect the local
+  toolchain and explain any missing prerequisites. Run the existing parser,
+  scheduler and registration tests, build the APK and verify its signature.
+- Use my existing signing key only if I explicitly identify it for this project;
+  otherwise generate a private development key. Explain that a different key
+  cannot update an existing installation in place. Never publish signing keys.
+- Keep all tests synthetic. Do not claim device/locked-screen verification from
+  host tests or a successful build. Give me a short real-device checklist for
+  capture, locked-phone updates, refresh, failed-upload recovery and HA status.
+
+My configuration and privacy:
+- Use tools/register_home_assistant.py to generate my own private connection
+  file. Ask me to enter the HA URL/token locally through its prompts rather
+  than sharing credentials in chat. Never embed credentials or working webhook
+  URLs in source, examples, APKs, logs, screenshots or Git history.
+- Use placeholders in public examples. Keep private registration files,
+  connection files, signing keys and exported vehicle logs out of Git.
+- Guide me through importing the connection file, choosing the myAudi widget
+  and starting capture. Explain which steps need my interaction on the phone.
+- Check my actual HA entity IDs before adapting the dashboard. Preserve any
+  existing dashboard; offer a separate dashboard or the standalone health card.
+  Do not overwrite unrelated configuration or publish a repository/release
+  unless I request it.
+
+Finish with the APK location, source commit, test results, setup steps and
+remaining device checks. Clearly distinguish completed work from steps that
+still require my phone or Home Assistant access. Keep the upstream licence
+and attribution when distributing a derivative.
+```
+
+For repeatable builds, use a specific release tag or commit instead of assuming the latest branch remains unchanged. Repository v0.4.1 is a Home Assistant configuration/documentation release; its Android app version is v0.4.
+
 ## References
 
 - [Android widget hosts](https://developer.android.com/develop/ui/views/appwidgets/host)
