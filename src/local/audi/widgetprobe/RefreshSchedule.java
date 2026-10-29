@@ -1,7 +1,7 @@
 package local.audi.widgetprobe;
 
 final class RefreshSchedule {
-    static final long INTERVAL = 3600000L;
+    static final long INTERVAL = 20 * 60 * 1000L;
     static long normalize(long now, long due) {
         return due == 0 || due > now + INTERVAL ? now + INTERVAL : due;
     }

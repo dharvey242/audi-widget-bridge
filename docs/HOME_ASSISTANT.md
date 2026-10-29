@@ -40,7 +40,7 @@ To choose another threshold, edit `age > 21600` in the card (seconds) and update
 
 ## Versions and validation
 
-Repository release **v0.4.1** updates Home Assistant examples/documentation. The Android app remains **v0.4**; existing installations do not need a new APK. New users can download the [v0.4 APK](https://github.com/dharvey242/audi-widget-bridge/releases/tag/v0.4).
+Release **v0.5** includes the Home Assistant examples and the Android app with a 20-minute refresh interval. Install the [v0.5 APK](https://github.com/dharvey242/audi-widget-bridge/releases/tag/v0.5) to use the new interval; existing Home Assistant configuration remains compatible.
 
 The template was rendered against Home Assistant with healthy, just-over-six-hours, missing and future timestamp cases. The complete dashboard was saved and read back successfully. Examples contain entity references and templates, not personal readings or credentials.
 

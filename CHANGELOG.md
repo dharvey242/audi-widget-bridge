@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5 — 20-minute automatic refresh
+
+- Reduce the inactivity refresh interval from 60 to 20 minutes. Successful HA transfers still reset the countdown.
+- Shorten persisted longer deadlines when capture resumes after upgrading.
+- Update app status, setup documentation and Codex prompt; retain six-hour HA delivery warning.
+
 ## 0.4.1 — Home Assistant configuration
 
 - Publish the complete dashboard with a six-hour bridge-delivery health banner.

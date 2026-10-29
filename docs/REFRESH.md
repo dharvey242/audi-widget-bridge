@@ -1,8 +1,8 @@
-# Automatic refresh (v0.4)
+# Automatic refresh (v0.5)
 
-While capture is running, the bridge attempts the widget refresh action after 60 minutes without a successful Home Assistant data transfer. A successful transfer, including unchanged or retried readings, restarts the 60-minute countdown. It never triggers an immediate refresh from a transfer, avoiding feedback loops. Manual refresh attempts also restart the countdown.
+While capture is running, the bridge attempts the widget refresh action after 20 minutes without a successful Home Assistant data transfer. A successful transfer, including unchanged or retried readings, restarts the 20-minute countdown. It never triggers an immediate refresh from a transfer, avoiding feedback loops. Manual refresh attempts also restart the countdown.
 
-The deadline persists across process restarts. Stopping capture disables execution; restarting capture checks an overdue deadline. A missing or ambiguous refresh control is logged and retried after another hour. Pending manual/locked tests are allowed to finish first. No alarm or wake lock is used: Android sleep may delay execution, and screen events check overdue work. This is not an exact hourly wake-up guarantee. Cached Audi data may still be returned.
+The deadline persists across process restarts. Stopping capture disables execution; restarting capture checks an overdue deadline. A missing or ambiguous refresh control is logged and retried after another 20 minutes. Pending manual/locked tests are allowed to finish first. No alarm or wake lock is used: Android sleep may delay execution, and screen events check overdue work. This is not an exact 20-minute wake-up guarantee. Cached Audi data may still be returned.
 
 # Refresh-button experiment
 

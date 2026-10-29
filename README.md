@@ -14,7 +14,7 @@ This is an independent community project, not affiliated with Audi or Home Assis
 - Keeps vehicle status as **raw text**. It does not infer locked/unlocked from “Parked safely”.
 - Captures background widget updates with a foreground service and persistent notification.
 - Stores the latest pending snapshot and retries failed uploads every five minutes while capture runs.
-- Offers a manual refresh action and a one-shot locked-phone refresh test. Automatically attempts refresh after **60 minutes without a successful HA transfer** while capture runs.
+- Offers a manual refresh action and a one-shot locked-phone refresh test. Automatically attempts refresh after **20 minutes without a successful HA transfer** while capture runs.
 
 ## Requirements
 
@@ -120,11 +120,11 @@ Look under **Settings → Devices & services → Mobile App → Audi Widget Brid
 
 An optional native-card dashboard is in [examples/dashboard.example.json](examples/dashboard.example.json). Create an empty manual dashboard, open its raw configuration editor, and paste the file's JSON (JSON is valid YAML). Replace the entity IDs if your prefix differs. This is an example for a **new** dashboard; do not replace an existing dashboard unless you intend to.
 
-See [Home Assistant configuration](docs/HOME_ASSISTANT.md) for complete setup and a standalone six-hour health card you can add to an existing dashboard. Repository v0.4.1 updates the HA configuration; the Android app remains v0.4.
+See [Home Assistant configuration](docs/HOME_ASSISTANT.md) for complete setup and a standalone six-hour health card you can add to an existing dashboard. The Android app is v0.5, with a 20-minute automatic refresh interval.
 
 ## What triggers updates?
 
-The bridge sends the startup snapshot and then every widget callback, including callbacks whose values are unchanged. Audi controls when it updates the widget. A five-minute timer retries **failed pending uploads**; it does not fetch vehicle data. A separate automatic refresh invokes the widget refresh control after 60 minutes without a successful HA transfer. Every successful transfer (even unchanged values) resets the countdown, as does a refresh attempt. Failed uploads do not reset it. Android sleep can delay the attempt; waking the phone checks overdue work.
+The bridge sends the startup snapshot and then every widget callback, including callbacks whose values are unchanged. Audi controls when it updates the widget. A five-minute timer retries **failed pending uploads**; it does not fetch vehicle data. A separate automatic refresh invokes the widget refresh control after 20 minutes without a successful HA transfer. Every successful transfer (even unchanged values) resets the countdown, as does a refresh attempt. Failed uploads do not reset it. Android sleep can delay the attempt; waking the phone checks overdue work.
 
 See [refresh testing](docs/REFRESH.md) for the optional refresh-button experiment. Invoking the widget's refresh action is **not proof of a fresh report from the car**.
 
@@ -182,7 +182,7 @@ Reproduce these behaviours:
   minutes while capture runs. Do not send synthetic vehicle readings to HA.
 - Invoke only a uniquely identified widget refresh control. Keep manual refresh
   and the one-shot locked-phone test. Automatically attempt refresh after
-  60 minutes without a successful HA transfer; each successful transfer or
+  20 minutes without a successful HA transfer; each successful transfer or
   refresh attempt resets the countdown. Never refresh immediately on every
   transfer, which would create a feedback loop. Preserve the deadline across
   restarts, avoid overlapping attempts, and document Android sleep delays.
@@ -222,7 +222,7 @@ still require my phone or Home Assistant access. Keep the upstream licence
 and attribution when distributing a derivative.
 ```
 
-For repeatable builds, use a specific release tag or commit instead of assuming the latest branch remains unchanged. Repository v0.4.1 is a Home Assistant configuration/documentation release; its Android app version is v0.4.
+For repeatable builds, use a specific release tag or commit instead of assuming the latest branch remains unchanged. Release v0.5 includes the 20-minute refresh interval and the Home Assistant configuration.
 
 ## References
 

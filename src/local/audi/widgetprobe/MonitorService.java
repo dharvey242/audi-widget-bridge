@@ -33,7 +33,7 @@ public class MonitorService extends Service {
             if (RefreshSchedule.shouldRefresh(now, due, delayedRefresh || refreshId != null)) {
                 // Advance before invoking: synchronous widget callbacks must not loop.
                 prefs.edit().putLong("autoRefreshDue", now + AUTO_INTERVAL).apply();
-                Records.note(MonitorService.this, "automatic_refresh_due", "60-minute inactivity interval elapsed.");
+                Records.note(MonitorService.this, "automatic_refresh_due", "20-minute inactivity interval elapsed.");
                 performRefresh("automatic");
             }
             handler.removeCallbacks(this);
@@ -48,7 +48,7 @@ public class MonitorService extends Service {
 
     static String automaticStatus(Context context) {
         long due = context.getSharedPreferences("probe", 0).getLong("autoRefreshDue", 0);
-        return "Automatic refresh: 60 minutes after the last successful HA transfer or refresh attempt."
+        return "Automatic refresh: 20 minutes after the last successful HA transfer or refresh attempt."
             + (running && due > 0 ? " Next due: " + java.time.Instant.ofEpochMilli(due).toString() : " Start capture to enable.")
             + " Android sleep may delay execution.";
     }

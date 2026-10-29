@@ -109,7 +109,7 @@ def main():
         # Save a pending checkpoint to avoid accidental duplicate devices on rerun.
         private_write(state_file, state)
         body = {'device_id': state['device_id'], 'app_id': 'local.audi.widgetprobe',
-                'app_name': 'Audi Widget Bridge', 'app_version': '0.4',
+                'app_name': 'Audi Widget Bridge', 'app_version': '0.5',
                 'device_name': args.device_name, 'manufacturer': args.manufacturer,
                 'model': args.model, 'os_name': 'Android', 'os_version': args.os_version,
                 'supports_encryption': False, 'app_data': {}}
